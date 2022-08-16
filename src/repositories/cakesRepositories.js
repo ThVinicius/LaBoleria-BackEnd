@@ -7,4 +7,8 @@ function insert(name, price, image, description) {
   )
 }
 
-export default { insert }
+function getOneByName(name) {
+  return db.query(`SELECT * FROM cakes WHERE name = $1 LIMIT 1`, [name])
+}
+
+export default { insert, getOneByName }
