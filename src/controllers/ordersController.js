@@ -18,3 +18,18 @@ export async function createOrder(req, res) {
     }
   }
 }
+
+export async function getOrders(req, res) {
+  const { date } = req.query
+
+  try {
+    const { rows: orders } = await ordersRepository.getOrders(date)
+
+    if (orders.length === 0) return res.status(404).send(orders)
+
+    return res.status(200).send(orders)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send(error)
+  }
+}
