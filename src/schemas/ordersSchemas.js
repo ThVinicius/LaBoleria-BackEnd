@@ -7,4 +7,8 @@ const create = joi.object({
   totalPrice: joi.number().required()
 })
 
-export { create }
+const paramsId = joi.object({
+  id: joi.number().greater(0).required()
+})
+
+export { create, paramsId }

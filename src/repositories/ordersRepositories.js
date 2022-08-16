@@ -7,13 +7,37 @@ function insert(clientId, cakeId, quantity, totalPrice) {
   )
 }
 
-function getOrders(date) {
-  const where =
-    date !== undefined ? `WHERE TO_CHAR(o."createdAt", 'YYYY-MM-DD') = $1` : ''
+function getOrders(date, id) {
+  const aux = [
+    { key: 'date', value: date },
+    { key: 'id', value: id }
+  ].filter(({ value }) => value !== undefined)
+
+  let where = ''
 
   const params = []
 
-  if (date !== undefined) params.push(date)
+  let count = 1
+
+  aux.forEach(({ key, value }, index) => {
+    const whereOrAnd = index === 0 ? 'WHERE' : ' AND'
+
+    switch (key) {
+      case 'date':
+        where += `${whereOrAnd} TO_CHAR(o."createdAt", 'YYYY-MM-DD') = $${count}`
+        params.push(value)
+        count++
+        break
+
+      case 'id':
+        where += `${whereOrAnd} o.id = $${count}`
+        params.push(value)
+        break
+
+      default:
+        break
+    }
+  })
 
   return db.query(
     `

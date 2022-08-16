@@ -1,6 +1,8 @@
-export default function schemaValidator(schema) {
+export default function schemaValidator(schema, type = 'body') {
   return (req, res, next) => {
-    const { error } = schema.validate(req.body, { abortEarly: false })
+    const payload = type === 'body' ? req.body : req.params
+
+    const { error } = schema.validate(payload, { abortEarly: false })
 
     if (error) {
       if (
